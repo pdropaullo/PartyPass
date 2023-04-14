@@ -3,11 +3,12 @@
   <persistence-unit name="senac_pu" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <class>br.com.partypass.entidade.Produto</class>
+    <class>br.com.partypass.entidade.Cliente</class>  
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/party_pass?useTimezone=true&amp;serverTimezone=America/Sao_Paulo&amp;zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="Senac2021"/>
+      <property name="javax.persistence.jdbc.password" value="!!1234!!"/>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
       <property name="hibernate.hbm2ddl.auto" value="update"/>
     </properties>
