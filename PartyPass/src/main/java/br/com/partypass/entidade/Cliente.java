@@ -1,6 +1,8 @@
 package br.com.partypass.entidade;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.*;
 
@@ -43,7 +45,7 @@ public class Cliente implements Serializable {
     public Cliente() {
     }
 
-    public Cliente(String nome, String cpf, String email, String telefone, boolean ativo) {
+    public Cliente(String nome, String cpf, String email, String telefone, boolean ativo, Date dataNascimento) {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;

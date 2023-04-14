@@ -1,7 +1,6 @@
 package br.com.partypass.dao;
 
 import br.com.partypass.entidade.Cliente;
-
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;

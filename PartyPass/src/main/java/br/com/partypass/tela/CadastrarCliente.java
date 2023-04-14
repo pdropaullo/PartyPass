@@ -4,10 +4,21 @@ import br.com.partypass.dao.ClienteDao;
 import br.com.partypass.dao.ClienteDaoImpl;
 import br.com.partypass.dao.HibernateUtil;
 import br.com.partypass.entidade.Cliente;
-import java.util.Calendar;
+import br.com.partypass.util.MyQRCode;
+import com.google.zxing.WriterException;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import org.hibernate.HibernateException;
+import javax.swing.JPanel;
 import org.hibernate.Session;
 
 public class CadastrarCliente extends javax.swing.JFrame {
@@ -50,7 +61,7 @@ public class CadastrarCliente extends javax.swing.JFrame {
         varCpf = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        varData = new org.netbeans.modules.form.InvalidComponent();
+        varData = new com.toedter.calendar.JDateChooser();
         lb_saldo = new javax.swing.JLabel();
         varSaldo = new javax.swing.JFormattedTextField();
         lb_telefone = new javax.swing.JLabel();
@@ -228,19 +239,15 @@ public class CadastrarCliente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCadastrarActionPerformed
-        Calendar cal = Calendar.getInstance();
 
-// Defina a data desejada usando o método set()
-        cal.set(Calendar.YEAR, 2023); // ano
-        cal.set(Calendar.MONTH, 3);   // mês (janeiro = 0)
-        cal.set(Calendar.DAY_OF_MONTH, 9); // dia
-
-// Obtenha a data como um objeto java.util.Date
-        Date dataUtil = cal.getTime();
-
-// Converta a data para um objeto java.sql.Date, se necessário
-        java.sql.Date dataSql = new java.sql.Date(dataUtil.getTime());
         sessao = HibernateUtil.abrirConexao();
+        data = varData.getDate();
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            data = inputFormat.parse(varData.getDateFormatString());
+        } catch (ParseException ex) {
+            Logger.getLogger(CadastrarCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         if (validarFormulario()) {
             if ((data == null)) {
@@ -251,7 +258,7 @@ public class CadastrarCliente extends javax.swing.JFrame {
                 cliente = new Cliente();
                 cliente.setAtivo(true);
                 cliente.setSenha("12345");
-                data = varData.getCalendar().getTime();
+                cliente.setDataNascimento(data);
 
             } else {
                 buscarValorAtivoBotao();
@@ -264,11 +271,29 @@ public class CadastrarCliente extends javax.swing.JFrame {
 
             clienteDao.salvarOuAlterar(cliente, sessao);
             dispose();
-            JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso!"
-                    + "Seu cógigo de compra é: " + cliente.getId());
-            sessao.close();
+            JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso!");
+            String path = "qrcode-" + cliente.getId() + ".png";
+            try {
+                MyQRCode.createQRCodeForClient(cliente, path);
+
+            } catch (WriterException | IOException e) {
+                e.printStackTrace();
+            }
+
+            String caminhoImagem = "qrcode-" + cliente.getId() + ".png";
+            JOptionPane.showMessageDialog(null, criarJOptionPaneComImagem(caminhoImagem), "Seu QRCode", JOptionPane.PLAIN_MESSAGE);
+
         }
+
     }//GEN-LAST:event_btCadastrarActionPerformed
+
+    public static JPanel criarJOptionPaneComImagem(String caminhoImagem) {
+        ImageIcon icon = new ImageIcon(caminhoImagem);
+        JLabel label = new JLabel(icon);
+        JPanel panel = new JPanel();
+        panel.add(label);
+        return panel;
+    }
 
     private void carregarAlteracaoCliente(Cliente cliente1) {
         this.cliente = cliente1;
@@ -328,6 +353,43 @@ public class CadastrarCliente extends javax.swing.JFrame {
         });
     }
 
+    private void gerarImagem() {
+        JOptionPane.showMessageDialog(null, sessao);
+
+        // Carrega a imagem do arquivo
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File("caminho/para/imagem.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Cria um ImageIcon com a imagem carregada
+        ImageIcon icon = new ImageIcon(img);
+    }
+
+//    private void gerarQRCode() {
+//        String nome = varNome.getText();
+//        String telefone = varTelefone.getText();
+//
+//        MyQRCode qrCode = new MyQRCode();
+//        String data = "Nome: " + nome + "\nTelefone: " + telefone;
+//        String path = "qrCode.png";
+//        String charset = "UTF-8";
+//        Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
+//        hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+//        try {
+//            qrCode.createQR(data, path, charset, hashMap, 200, 200);
+//
+//            // carregar a imagem do QR Code e definir como ícone do JLabel
+//            ImageIcon icon = new ImageIcon(path);
+////            lblQRCode.setIcon(icon);
+//
+//            JOptionPane.showMessageDialog(CadastrarCliente.this, "QR Code gerado com sucesso!");
+//        } catch (Exception ex) {
+//            JOptionPane.showMessageDialog(CadastrarCliente.this, "Erro ao gerar QR Code: " + ex.getMessage());
+//      }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCadastrar;
     private javax.swing.JToggleButton btSituacao;
@@ -342,7 +404,7 @@ public class CadastrarCliente extends javax.swing.JFrame {
     private javax.swing.JLabel lb_telefone;
     private javax.swing.JLabel lb_titulo;
     private javax.swing.JFormattedTextField varCpf;
-    private org.netbeans.modules.form.InvalidComponent varData;
+    private com.toedter.calendar.JDateChooser varData;
     private javax.swing.JTextField varEmail;
     private javax.swing.JTextField varNome;
     private javax.swing.JFormattedTextField varSaldo;
