@@ -57,19 +57,19 @@
                                           <Group type="102" attributes="0">
                                               <Component id="varCodigoProduto" min="-2" pref="100" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="btOkProduto" min="-2" pref="50" max="-2" attributes="0"/>
+                                              <Component id="btOkProduto" min="-2" pref="61" max="-2" attributes="0"/>
                                           </Group>
+                                          <Component id="varTotal" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                                          <Component id="varValorProduto" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="varQuantidade" min="-2" pref="100" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                               <Component id="lb_unidade" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="btOkQuantidade" min="-2" pref="50" max="-2" attributes="0"/>
+                                              <Component id="btOkQuantidade" min="-2" pref="61" max="-2" attributes="0"/>
                                           </Group>
-                                          <Component id="varTotal" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
-                                          <Component id="varValorProduto" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace min="0" pref="125" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="114" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -231,6 +231,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="OK"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btOkProdutoActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lb_nome_produto">
       <Properties>
@@ -299,6 +302,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="OK"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btOkQuantidadeActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lb_total">
       <Properties>
@@ -331,6 +337,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="CONFIRMAR"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btConfirmarActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

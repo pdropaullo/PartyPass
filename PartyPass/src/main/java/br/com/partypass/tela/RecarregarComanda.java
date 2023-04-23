@@ -186,20 +186,20 @@ public class RecarregarComanda extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPesquisarActionPerformed
-        String numeroComanda = varNumeroComanda.getText();
-        if (numeroComanda) {//não existir no banco
-            JOptionPane.showMessageDialog(null, "Cliente não encontrado!");
-        } else {
-            try {
-                sessao = HibernateUtil.abrirConexao();
-                clientes = clienteDao.pesquisarPorId(id, sessao);
-                varCliente.setText(cliente.getNome());
-            } catch (HibernateException e) {
-                System.out.println("Erro ao pesquisar cliente: " + e.getMessage());
-            } finally {
-                sessao.close();
-            }
-        }
+//        String numeroComanda = varNumeroComanda.getText();
+//        if (numeroComanda) {//não existir no banco
+//            JOptionPane.showMessageDialog(null, "Cliente não encontrado!");
+//        } else {
+//            try {
+//                sessao = HibernateUtil.abrirConexao();
+//                clientes = clienteDao.pesquisarPorId(id, sessao);
+//                varCliente.setText(cliente.getNome());
+//            } catch (HibernateException e) {
+//                System.out.println("Erro ao pesquisar cliente: " + e.getMessage());
+//            } finally {
+//                sessao.close();
+//            }
+//        }
     }//GEN-LAST:event_btPesquisarActionPerformed
 
     /**

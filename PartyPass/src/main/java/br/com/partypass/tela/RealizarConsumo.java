@@ -11,7 +11,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import static org.hibernate.criterion.Projections.id;
 
 public class RealizarConsumo extends javax.swing.JFrame {
 
@@ -21,9 +20,9 @@ public class RealizarConsumo extends javax.swing.JFrame {
     private ClienteDao clienteDao = new ClienteDaoImpl();
     private List<Cliente> clientes;
 
+    private List<Produto> produtos;
     private Produto produto;
     private ProdutoDao produtoDao = new ProdutoDaoImpl();
-    private List<Produto> produtos;
 
     public RealizarConsumo() {
         initComponents();
@@ -90,6 +89,11 @@ public class RealizarConsumo extends javax.swing.JFrame {
 
         btOkProduto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btOkProduto.setText("OK");
+        btOkProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btOkProdutoActionPerformed(evt);
+            }
+        });
 
         lb_nome_produto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lb_nome_produto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -115,6 +119,11 @@ public class RealizarConsumo extends javax.swing.JFrame {
 
         btOkQuantidade.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btOkQuantidade.setText("OK");
+        btOkQuantidade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btOkQuantidadeActionPerformed(evt);
+            }
+        });
 
         lb_total.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lb_total.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -127,6 +136,11 @@ public class RealizarConsumo extends javax.swing.JFrame {
 
         btConfirmar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btConfirmar.setText("CONFIRMAR");
+        btConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btConfirmarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -161,16 +175,16 @@ public class RealizarConsumo extends javax.swing.JFrame {
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(varCodigoProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(btOkProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(btOkProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(varTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(varValorProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(varQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(lb_unidade)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(btOkQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(varTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(varValorProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 125, Short.MAX_VALUE))))))
+                                                .addComponent(btOkQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(0, 114, Short.MAX_VALUE))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(196, 196, 196)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -236,53 +250,86 @@ public class RealizarConsumo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPesquisarActionPerformed
-        String numeroComanda = varNumeroComanda.getText();
-        if (numeroComanda) {//não existir no banco
-            JOptionPane.showMessageDialog(null, "Cliente não encontrado!");
-        } else {
-            try {
-                sessao = HibernateUtil.abrirConexao();
-                clientes = clienteDao.pesquisarPorId(id, sessao);
-                varCliente.setText(cliente.getNome());
-            } catch (HibernateException e) {
-                System.out.println("Erro ao pesquisar cliente: " + e.getMessage());
-            } finally {
-                sessao.close();
+        String termoPesquisa = varNumeroComanda.getText().trim();
+        try {
+            sessao = HibernateUtil.abrirConexao();
+            clientes = clienteDao.pesquisarId(Long.valueOf(termoPesquisa), sessao);
+            if (clientes.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Nenhum cliente com esse código!");
+            } else {
+                clientes.add(cliente);
+                varCliente.setText(clientes.get(0).getNome());
             }
+        } catch (HibernateException ex) {
+            JOptionPane.showMessageDialog(null, "Não foi possível pesquisar o cliente: " + ex.getMessage());
         }
     }//GEN-LAST:event_btPesquisarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RealizarConsumo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RealizarConsumo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RealizarConsumo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RealizarConsumo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
+    private void btOkProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOkProdutoActionPerformed
+        if (validarPesquisa()) {
+            String termoPesquisa = varCodigoProduto.getText().trim();
+            try {
+                sessao = HibernateUtil.abrirConexao();
+                produtos = produtoDao.pesquisarPorCodigo(termoPesquisa, sessao);
+                if (produtos.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Nenhum produto com esse código!");
+                } else {
+                    produtos.add(produto);
 
-        /* Create and display the form */
+                    varNomeProduto.setText(produtos.get(0).getNome());
+                    varValorProduto.setText(String.valueOf(produtos.get(0).getValor()));
+                }
+            } catch (HibernateException ex) {
+                JOptionPane.showMessageDialog(null, "Não foi possível pesquisar os produtos: " + ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btOkProdutoActionPerformed
+
+    private void btOkQuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOkQuantidadeActionPerformed
+        String valor = varQuantidade.getText().trim();
+        try {
+            sessao = HibernateUtil.abrirConexao();
+            varTotal.setText(String.valueOf(Double.valueOf(produtos.get(0).getValor()) * Double.valueOf(valor)));
+
+        } catch (HibernateException ex) {
+            JOptionPane.showMessageDialog(null, "Não foi possível pesquisar os produtos: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_btOkQuantidadeActionPerformed
+
+    private void btConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConfirmarActionPerformed
+        try {
+        double saldo = clientes.get(0).getSaldo();
+            sessao = HibernateUtil.abrirConexao();
+            Double atualizado = saldo - Double.valueOf(varTotal.getText().trim());
+            clientes.get(0).setSaldo(atualizado);
+            clienteDao.salvarOuAlterar(clientes.get(0), sessao);
+            dispose();;
+
+        } catch (HibernateException ex) {
+            JOptionPane.showMessageDialog(null, "Não foi possível pesquisar os produtos: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_btConfirmarActionPerformed
+
+    private boolean validarPesquisa() {
+        if (varCodigoProduto.getText().trim().length() > 10) {
+            JOptionPane.showMessageDialog(null, "Valor de filtro não pode ultrapassar 10 caracteres!");
+            return false;
+        } else if (!validarFiltro()) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validarFiltro() {
+        String valorFiltro = varCodigoProduto.getText().trim();
+        if (valorFiltro.length() < 1) {
+            JOptionPane.showMessageDialog(null, "Digite pelo menos 1 caracteres para pesquisar pelo código!");
+            return false;
+        }
+        return true;
+    }
+
+    public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new RealizarConsumo().setVisible(true);
