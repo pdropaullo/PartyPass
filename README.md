@@ -4,7 +4,7 @@
 
 ## Descrição
 
-PartyPass é um sistema de gerenciamento de eventos desenvolvido em Java. Ele permite que você organize e gerencie suas festas, conferências e encontros com facilidade. Seja planejando um pequeno encontro social ou um evento em grande escala, o PartyPass tem tudo o que você precisa.
+PartyPass é um sistema de gerenciamento de eventos desenvolvido em Java. Ele permite que você organize e gerencie suas festas, conferências e encontros com facilidade. Seja planejando um pequeno encontro social ou um evento em grande escala, o PartyPass tem tudo o que você precisa.  
 Foi desenvolvido durante a atividade final da disciplina de Engenharia de Software, sob a orientação da Professora Daniela Amorim.  
 A equipe é composta pelos estudantes da 4ª Fase do Curso Superior de Tecnologia em Análise e Desenvolvimento de Sistemas na instituição Faculdade de Tecnologia Senac Palhoça:  
 [Ana Flávia de Freitas Corrêa](https://github.com/AnaFlaviaCorrea)  
